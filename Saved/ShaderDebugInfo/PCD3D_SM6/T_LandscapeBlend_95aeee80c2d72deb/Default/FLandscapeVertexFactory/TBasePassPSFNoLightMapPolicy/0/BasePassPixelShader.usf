@@ -20084,6 +20084,94 @@ float4 MaterialExpressionDBufferTextureLookup(FMaterialPixelParameters Parameter
 
 
 
+FloatDeriv ConstructConstantFloatDeriv(float Value)
+{
+	FloatDeriv Ret;
+	Ret.Value = Value;
+	Ret.Ddx = 0;
+	Ret.Ddy = 0;
+	return Ret;
+}
+
+FloatDeriv2 ConstructConstantFloatDeriv2(float2 Value)
+{
+	FloatDeriv2 Ret;
+	Ret.Value = Value;
+	Ret.Ddx = 0;
+	Ret.Ddy = 0;
+	return Ret;
+}
+
+FloatDeriv2 Convert_FloatDeriv2_FloatDeriv(FloatDeriv Src)
+{
+	FloatDeriv2 Ret;
+	Ret.Value = ((float2)Src.Value);
+	Ret.Ddx = ((float2)Src.Ddx);
+	Ret.Ddy = ((float2)Src.Ddy);
+	return Ret;
+}
+
+FloatDeriv ExtractFloatDeriv2_1(FloatDeriv2 InValue)
+{
+	FloatDeriv Ret;
+	Ret.Value = InValue.Value.x;
+	Ret.Ddx = InValue.Ddx.x;
+	Ret.Ddy = InValue.Ddy.x;
+	return Ret;
+}
+
+FloatDeriv ExtractFloatDeriv2_2(FloatDeriv2 InValue)
+{
+	FloatDeriv Ret;
+	Ret.Value = InValue.Value.y;
+	Ret.Ddx = InValue.Ddx.y;
+	Ret.Ddy = InValue.Ddy.y;
+	return Ret;
+}
+
+FloatDeriv AddDeriv(FloatDeriv A, FloatDeriv B)
+{
+	FloatDeriv Ret;
+	Ret.Value = A.Value + B.Value;
+	Ret.Ddx = A.Ddx + B.Ddx;
+	Ret.Ddy = A.Ddy + B.Ddy;
+	return Ret;
+}
+
+FloatDeriv2 AddDeriv(FloatDeriv2 A, FloatDeriv2 B)
+{
+	FloatDeriv2 Ret;
+	Ret.Value = A.Value + B.Value;
+	Ret.Ddx = A.Ddx + B.Ddx;
+	Ret.Ddy = A.Ddy + B.Ddy;
+	return Ret;
+}
+
+FloatDeriv MulDeriv(FloatDeriv A, FloatDeriv B)
+{
+	FloatDeriv Ret;
+	Ret.Value = A.Value * B.Value;
+	Ret.Ddx = A.Ddx * B.Value + A.Value * B.Ddx;
+	Ret.Ddy = A.Ddy * B.Value + A.Value * B.Ddy;
+	return Ret;
+}
+
+FloatDeriv2 MulDeriv(FloatDeriv2 A, FloatDeriv2 B)
+{
+	FloatDeriv2 Ret;
+	Ret.Value = A.Value * B.Value;
+	Ret.Ddx = A.Ddx * B.Value + A.Value * B.Ddx;
+	Ret.Ddy = A.Ddy * B.Value + A.Value * B.Ddy;
+	return Ret;
+}
+
+FloatDeriv DotDeriv(FloatDeriv2 A, FloatDeriv2 B)
+{
+	FloatDeriv Ret = ConstructConstantFloatDeriv(0);
+	Ret = AddDeriv(Ret,MulDeriv(ExtractFloatDeriv2_1(A),ExtractFloatDeriv2_1(B)));
+	Ret = AddDeriv(Ret,MulDeriv(ExtractFloatDeriv2_2(A),ExtractFloatDeriv2_2(B)));
+	return Ret;
+}
 
 
 
@@ -20092,7 +20180,8 @@ float4 MaterialExpressionDBufferTextureLookup(FMaterialPixelParameters Parameter
 
 
 
-#line 2752 "/Engine/Generated/Material.ush"
+
+#line 2841 "/Engine/Generated/Material.ush"
 
 
 
@@ -20269,7 +20358,7 @@ float GetMaterialOpacityRaw(FPixelMaterialInputs PixelMaterialInputs)
 	return PixelMaterialInputs.Opacity;
 }
 
-#line 2942 "/Engine/Generated/Material.ush"
+#line 3031 "/Engine/Generated/Material.ush"
 
 
 
@@ -20433,14 +20522,14 @@ FMaterialRefractionData GetMaterialRefraction(FPixelMaterialInputs PixelMaterial
 
 void GetMaterialCustomizedUVs(FMaterialVertexParameters Parameters, inout float2 OutTexCoords[4])
 {
-	float2 Local77 = Parameters.TexCoords[0].xy;
-	float2 Local78 = Parameters.TexCoords[1].xy;
-	float2 Local79 = Parameters.TexCoords[2].xy;
-	float2 Local80 = Parameters.TexCoords[3].xy;
-	OutTexCoords[0] = Local77;
-	OutTexCoords[1] = Local78;
-	OutTexCoords[2] = Local79;
-	OutTexCoords[3] = Local80;
+	float2 Local85 = Parameters.TexCoords[0].xy;
+	float2 Local86 = Parameters.TexCoords[1].xy;
+	float2 Local87 = Parameters.TexCoords[2].xy;
+	float2 Local88 = Parameters.TexCoords[3].xy;
+	OutTexCoords[0] = Local85;
+	OutTexCoords[1] = Local86;
+	OutTexCoords[2] = Local87;
+	OutTexCoords[3] = Local88;
 
 }
 
@@ -20455,7 +20544,7 @@ float GetMaterialPixelDepthOffset(FPixelMaterialInputs PixelMaterialInputs)
 	return PixelMaterialInputs.PixelDepthOffset;
 }
 
-#line 3142 "/Engine/Generated/Material.ush"
+#line 3231 "/Engine/Generated/Material.ush"
 
 
 float3 TransformTangentNormalToWorld(float3x3 TangentToWorld, float3 TangentNormal)
@@ -20532,24 +20621,30 @@ void CalcPixelMaterialInputs(in out FMaterialPixelParameters Parameters, in out 
 	float Local7 = (Local5 + Local6);
 	float Local8 = (1.00000000 / Local7);
 	float2 Local9 = Parameters.TexCoords[0].xy;
-	float Local10 =  1.0f;
-	float4 Local11 = ProcessMaterialLinearColorTextureLookup(Texture2DSampleBias(Material.Texture2D_1,Material.Texture2D_1Sampler,  Local9 ,View.MaterialTextureMipBias));
-	float Local12 =  1.0f;
-	float3 Local13 = (Local11.rgb * ((float3)Local2));
-	float3 Local14 = (((float3)0.00000000) + Local13);
-	float Local15 =  1.0f;
-	float4 Local16 = ProcessMaterialLinearColorTextureLookup(Texture2DSampleBias(Material.Texture2D_2,Material.Texture2D_2Sampler,  Local9 ,View.MaterialTextureMipBias));
-	float Local17 =  1.0f;
-	float3 Local18 = (Local16.rgb * ((float3)Local4));
-	float3 Local19 = (Local14 + Local18);
-	float Local20 =  1.0f;
-	float4 Local21 = ProcessMaterialLinearColorTextureLookup(Texture2DSampleBias(Material.Texture2D_3,Material.Texture2D_3Sampler,  Local9 ,View.MaterialTextureMipBias));
-	float Local22 =  1.0f;
-	float3 Local23 = (Local21.rgb * ((float3)Local6));
-	float3 Local24 = (Local19 + Local23);
+	float Local10 = dot(  Local9 ,float2(-0.00000000,1.00000000));
+	float Local11 = dot(  Local9 ,float2(1.00000000,0.00000000));
+	float2 Local12 = float2(  Local11 ,  Local10 );
+	float2 Local13 = (((float2)1.00000000) *   Local12 );
+	float2 Local14 = (  Local13  + float2(0.00000000,0.00000000));
+	float2 Local15 = (  Local14  * ((float2)1.00000000));
+	float Local16 =  1.0f;
+	float4 Local17 = ProcessMaterialLinearColorTextureLookup(Texture2DSampleBias(Material.Texture2D_1,Material.Texture2D_1Sampler,  Local15 ,View.MaterialTextureMipBias));
+	float Local18 =  1.0f;
+	float3 Local19 = (Local17.rgb * ((float3)Local2));
+	float3 Local20 = (((float3)0.00000000) + Local19);
+	float Local21 =  1.0f;
+	float4 Local22 = ProcessMaterialLinearColorTextureLookup(Texture2DSampleBias(Material.Texture2D_2,Material.Texture2D_2Sampler,  Local15 ,View.MaterialTextureMipBias));
+	float Local23 =  1.0f;
+	float3 Local24 = (Local22.rgb * ((float3)Local4));
+	float3 Local25 = (Local20 + Local24);
+	float Local26 =  1.0f;
+	float4 Local27 = ProcessMaterialLinearColorTextureLookup(Texture2DSampleBias(Material.Texture2D_3,Material.Texture2D_3Sampler,  Local15 ,View.MaterialTextureMipBias));
+	float Local28 =  1.0f;
+	float3 Local29 = (Local27.rgb * ((float3)Local6));
+	float3 Local30 = (Local25 + Local29);
 
 	
-	PixelMaterialInputs.Normal = Local24;
+	PixelMaterialInputs.Normal = Local30;
 
 
 
@@ -20590,68 +20685,70 @@ void CalcPixelMaterialInputs(in out FMaterialPixelParameters Parameters, in out 
 
 
 	
-	float3 Local25 = lerp(float3(0.00000000,0.00000000,0.00000000),Material.PreshaderBuffer[4].yzw,Material.PreshaderBuffer[4].x);
-	float Local26 = dot(Local1,Material.PreshaderBuffer[5]);
-	float Local27 = (Local3 + Local26);
-	float Local28 = (Local27 + Local4);
-	float Local29 = (Local28 + Local6);
-	float Local30 = (1.00000000 / Local29);
-	float Local31 =  1.0f;
-	float4 Local32 = ProcessMaterialColorTextureLookup(Texture2DSampleBias(Material.Texture2D_4,Material.Texture2D_4Sampler,  Local9 ,View.MaterialTextureMipBias));
-	float Local33 =  1.0f;
-	float3 Local34 = (Local32.rgb * ((float3)Local2));
-	float3 Local35 = (((float3)0.00000000) + Local34);
-	float Local36 =  1.0f;
-	float4 Local37 = ProcessMaterialColorTextureLookup(Texture2DSampleBias(Material.Texture2D_5,Material.Texture2D_5Sampler,  Local9 ,View.MaterialTextureMipBias));
-	float Local38 =  1.0f;
-	float3 Local39 = (Local37.rgb * ((float3)Local26));
-	float3 Local40 = (Local35 + Local39);
-	float Local41 =  1.0f;
-	float4 Local42 = ProcessMaterialColorTextureLookup(Texture2DSampleBias(Material.Texture2D_6,Material.Texture2D_6Sampler,  Local9 ,View.MaterialTextureMipBias));
-	float Local43 =  1.0f;
-	float3 Local44 = (Local42.rgb * ((float3)Local4));
-	float3 Local45 = (Local40 + Local44);
-	float Local46 =  1.0f;
-	float4 Local47 = ProcessMaterialColorTextureLookup(Texture2DSampleBias(Material.Texture2D_7,Material.Texture2D_7Sampler,  Local9 ,View.MaterialTextureMipBias));
-	float Local48 =  1.0f;
-	float3 Local49 = (Local47.rgb * ((float3)Local6));
-	float3 Local50 = (Local45 + Local49);
-	float Local51 =  1.0f;
-	float4 Local52 = ProcessMaterialLinearColorTextureLookup(Texture2DSampleBias(Material.Texture2D_8,Material.Texture2D_8Sampler,  Local9 ,View.MaterialTextureMipBias));
-	float Local53 =  1.0f;
-	float Local54 = (1.60000002 + Local52.g);
-	float Local55 = (Local54 * 0.69999999);
-	float Local56 = (Local55 * Local2);
-	float Local57 = (0.00000000 + Local56);
-	float Local58 =  1.0f;
-	float4 Local59 = ProcessMaterialColorTextureLookup(Texture2DSampleBias(Material.Texture2D_9,Material.Texture2D_9Sampler,  Local9 ,View.MaterialTextureMipBias));
-	float Local60 =  1.0f;
-	float Local61 = (Local59.g * Local26);
-	float Local62 = (Local57 + Local61);
-	float Local63 =  1.0f;
-	float4 Local64 = ProcessMaterialLinearColorTextureLookup(Texture2DSampleBias(Material.Texture2D_10,Material.Texture2D_10Sampler,  Local9 ,View.MaterialTextureMipBias));
-	float Local65 =  1.0f;
-	float Local66 = (1.60000002 + Local64.g);
-	float Local67 = (Local66 * 0.50000000);
-	float Local68 = (Local67 * Local4);
-	float Local69 = (Local62 + Local68);
-	float Local70 =  1.0f;
-	float4 Local71 = ProcessMaterialLinearColorTextureLookup(Texture2DSampleBias(Material.Texture2D_11,Material.Texture2D_11Sampler,  Local9 ,View.MaterialTextureMipBias));
-	float Local72 =  1.0f;
-	float Local73 = (1.60000002 + Local71.g);
-	float Local74 = (Local73 * 0.50000000);
-	float Local75 = (Local74 * Local6);
-	float Local76 = (Local69 + Local75);
+	float3 Local31 = lerp(float3(0.00000000,0.00000000,0.00000000),Material.PreshaderBuffer[4].yzw,Material.PreshaderBuffer[4].x);
+	float Local32 = dot(Local1,Material.PreshaderBuffer[5]);
+	float Local33 = (Local3 + Local32);
+	float Local34 = (Local33 + Local4);
+	float Local35 = (Local34 + Local6);
+	float Local36 = (1.00000000 / Local35);
+	float Local37 =  1.0f;
+	float4 Local38 = ProcessMaterialColorTextureLookup(Texture2DSampleBias(Material.Texture2D_4,Material.Texture2D_4Sampler,  Local15 ,View.MaterialTextureMipBias));
+	float Local39 =  1.0f;
+	float3 Local40 = (Local38.rgb * ((float3)Local2));
+	float3 Local41 = (((float3)0.00000000) + Local40);
+	float Local42 =  1.0f;
+	float4 Local43 = ProcessMaterialColorTextureLookup(Texture2DSampleBias(Material.Texture2D_5,Material.Texture2D_5Sampler,  Local15 ,View.MaterialTextureMipBias));
+	float Local44 =  1.0f;
+	float3 Local45 = (Local43.rgb * ((float3)Local32));
+	float3 Local46 = (Local41 + Local45);
+	float Local47 =  1.0f;
+	float4 Local48 = ProcessMaterialColorTextureLookup(Texture2DSampleBias(Material.Texture2D_6,Material.Texture2D_6Sampler,  Local15 ,View.MaterialTextureMipBias));
+	float Local49 =  1.0f;
+	float3 Local50 = (Local48.rgb * ((float3)Local4));
+	float3 Local51 = (Local46 + Local50);
+	float Local52 =  1.0f;
+	float4 Local53 = ProcessMaterialColorTextureLookup(Texture2DSampleBias(Material.Texture2D_7,Material.Texture2D_7Sampler,  Local15 ,View.MaterialTextureMipBias));
+	float Local54 =  1.0f;
+	float3 Local55 = (Local53.rgb * ((float3)Local6));
+	float3 Local56 = (Local51 + Local55);
+	float Local57 =  1.0f;
+	float4 Local58 = ProcessMaterialLinearColorTextureLookup(Texture2DSampleBias(Material.Texture2D_8,Material.Texture2D_8Sampler,  Local15 ,View.MaterialTextureMipBias));
+	float Local59 =  1.0f;
+	float Local60 = (1.60000002 + Local58.g);
+	float Local61 = (Local60 * 0.69999999);
+	float Local62 = (Local61 * Local2);
+	float Local63 = (0.00000000 + Local62);
+	float Local64 =  1.0f;
+	float4 Local65 = ProcessMaterialColorTextureLookup(Texture2DSampleBias(Material.Texture2D_9,Material.Texture2D_9Sampler,  Local15 ,View.MaterialTextureMipBias));
+	float Local66 =  1.0f;
+	float Local67 = (1.60000002 + Local65.g);
+	float Local68 = (Local67 * 0.63000000);
+	float Local69 = (Local68 * Local32);
+	float Local70 = (Local63 + Local69);
+	float Local71 =  1.0f;
+	float4 Local72 = ProcessMaterialLinearColorTextureLookup(Texture2DSampleBias(Material.Texture2D_10,Material.Texture2D_10Sampler,  Local15 ,View.MaterialTextureMipBias));
+	float Local73 =  1.0f;
+	float Local74 = (1.60000002 + Local72.g);
+	float Local75 = (Local74 * 0.50000000);
+	float Local76 = (Local75 * Local4);
+	float Local77 = (Local70 + Local76);
+	float Local78 =  1.0f;
+	float4 Local79 = ProcessMaterialLinearColorTextureLookup(Texture2DSampleBias(Material.Texture2D_11,Material.Texture2D_11Sampler,  Local15 ,View.MaterialTextureMipBias));
+	float Local80 =  1.0f;
+	float Local81 = (1.60000002 + Local79.g);
+	float Local82 = (Local81 * 0.50000000);
+	float Local83 = (Local82 * Local6);
+	float Local84 = (Local77 + Local83);
 
-	PixelMaterialInputs.EmissiveColor = Local25;
+	PixelMaterialInputs.EmissiveColor = Local31;
 	PixelMaterialInputs.Opacity = 1.00000000;
 	PixelMaterialInputs.OpacityMask = 1.00000000;
-	PixelMaterialInputs.BaseColor = Local50;
+	PixelMaterialInputs.BaseColor = Local56;
 	PixelMaterialInputs.Metallic = 0.00000000;
 	PixelMaterialInputs.Specular = 0.50000000;
-	PixelMaterialInputs.Roughness = Local76;
+	PixelMaterialInputs.Roughness = Local84;
 	PixelMaterialInputs.Anisotropy = 0.00000000;
-	PixelMaterialInputs.Normal = Local24;
+	PixelMaterialInputs.Normal = Local30;
 	PixelMaterialInputs.Tangent = float3(1.00000000,0.00000000,0.00000000);
 	PixelMaterialInputs.Subsurface = 0;
 	PixelMaterialInputs.AmbientOcclusion = 1.00000000;
@@ -20670,7 +20767,7 @@ void CalcPixelMaterialInputs(in out FMaterialPixelParameters Parameters, in out 
 }
 
 
-#line 3509 "/Engine/Generated/Material.ush"
+#line 3614 "/Engine/Generated/Material.ush"
 
 
 
@@ -20703,7 +20800,7 @@ void ClipLODTransition(FMaterialPixelParameters Parameters, float DitherFactor)
 
 
 
-#line 3561 "/Engine/Generated/Material.ush"
+#line 3666 "/Engine/Generated/Material.ush"
 
 void ClipLODTransition(FMaterialPixelParameters Parameters)
 {
@@ -20725,14 +20822,14 @@ void GetMaterialClippingShadowDepth(FMaterialPixelParameters Parameters, FPixelM
 
 }
 
-#line 3594 "/Engine/Generated/Material.ush"
+#line 3699 "/Engine/Generated/Material.ush"
 
 
 void GetMaterialCoverageAndClipping(FMaterialPixelParameters Parameters, FPixelMaterialInputs PixelMaterialInputs)
 {
 	ClipLODTransition(Parameters);
 
-#line 3624 "/Engine/Generated/Material.ush"
+#line 3729 "/Engine/Generated/Material.ush"
 
 }
 
@@ -20749,7 +20846,7 @@ void GetMaterialClippingVelocity(FMaterialPixelParameters Parameters, FPixelMate
 }
 
 
-#line 3671 "/Engine/Generated/Material.ush"
+#line 3776 "/Engine/Generated/Material.ush"
 
 
 
@@ -20908,7 +21005,7 @@ float3x3 AssembleTangentToWorld( float3 TangentToWorld0, float4 TangentToWorld2 
 
 
 
-#line 3849 "/Engine/Generated/Material.ush"
+#line 3954 "/Engine/Generated/Material.ush"
 
 	
 	
@@ -20973,7 +21070,7 @@ void GetEyeNormals(
 	inout float3 OutIrisNormal,
 	inout float3 OutIrisPlaneNormal)
 {
-#line 3925 "/Engine/Generated/Material.ush"
+#line 4030 "/Engine/Generated/Material.ush"
 
   
 
