@@ -1346,3 +1346,35 @@ LogConfig: Set CVar [[r.Shadow.DetectVertexShaderLayerAtRuntime:1]]
 [2025.11.01-19.10.04:198][985]LogWorldSubsystemInput: UEnhancedInputDeveloperSettings::bEnableWorldSubsystem is false, the world subsystem will not be created!
 [2025.11.01-19.10.04:287][986]LogWorldSubsystemInput: UEnhancedInputDeveloperSettings::bEnableWorldSubsystem is false, the world subsystem will not be created!
 [2025.11.01-19.10.13:853][108]LogDerivedDataCache: C:/Users/PC/AppData/Local/UnrealEngine/Common/DerivedDataCache: Maintenance finished in +00:00:18.251 and deleted 0 files with total size 0 MiB and 0 empty folders. Scanned 9976 files in 11565 folders with total size 749 MiB.
+[2025.11.01-19.20.49:853][691]LogContentBrowser: Deferred new asset folder creation: NewFolder
+[2025.11.01-19.20.49:868][691]LogContentBrowser: Creating deferred item: NewFolder
+[2025.11.01-19.20.49:879][692]LogContentBrowser: Renaming the item being created (Deferred Item: NewFolder).
+[2025.11.01-19.20.51:019][824]LogContentBrowser: Attempting asset rename: NewFolder -> feature
+[2025.11.01-19.20.51:022][824]LogContentBrowser: End creating deferred item NewFolder
+[2025.11.01-19.21.04:671][494]LogContentBrowser: Deferred new asset folder creation: NewFolder
+[2025.11.01-19.21.04:682][494]LogContentBrowser: Creating deferred item: NewFolder
+[2025.11.01-19.21.04:711][496]LogContentBrowser: Renaming the item being created (Deferred Item: NewFolder).
+[2025.11.01-19.21.06:037][653]LogContentBrowser: Attempting asset rename: NewFolder -> entregable2-checkpointB
+[2025.11.01-19.21.06:037][653]LogContentBrowser: End creating deferred item NewFolder
+[2025.11.01-19.21.18:350][ 67]LogAssetEditorSubsystem: Opening Asset editor for Blueprint /Game/ThirdPerson/Blueprints/BP_ThirdPersonCharacter.BP_ThirdPersonCharacter
+[2025.11.01-19.21.18:352][ 67]LogWorldSubsystemInput: UEnhancedInputDeveloperSettings::bEnableWorldSubsystem is false, the world subsystem will not be created!
+[2025.11.01-19.21.18:352][ 67]LogChaos: FPhysicsSolverBase::AsyncDt:-1.000000
+[2025.11.01-19.21.19:473][ 67]LogSlate: Took 0.000710 seconds to synchronously load lazily loaded font '../../../Engine/Content/Slate/Fonts/Roboto-BoldCondensed.ttf' (158K)
+[2025.11.01-19.24.44:954][453]LogSlate: Window 'Color Picker' being destroyed
+[2025.11.01-19.25.02:071][271]LogSlate: Window 'Color Picker' being destroyed
+[2025.11.01-19.25.22:754][518]LogSlate: Window 'Color Picker' being destroyed
+[2025.11.01-19.25.45:339][767]LogSlate: Window 'Color Picker' being destroyed
+[2025.11.01-19.26.57:833][221]LogSlate: Window 'Color Picker' being destroyed
+[2025.11.01-19.27.25:863][ 96]LogSlate: Window 'Color Picker' being destroyed
+[2025.11.01-19.27.57:991][435]LogFileHelpers: InternalPromptForCheckoutAndSave started...
+[2025.11.01-19.27.58:064][435]Cmd: OBJ SAVEPACKAGE PACKAGE="/Game/jdma/Maps/LV_1" FILE="../../../../../../Users/PC/Documents/OPTI_EV/SpectralStadium/Content/jdma/Maps/LV_1.umap" SILENT=true AUTOSAVING=false KEEPDIRTY=false
+[2025.11.01-19.27.58:094][435]LogUObjectHash: Compacting FUObjectHashTables data took   1.51ms
+[2025.11.01-19.27.58:109][435]LogPackageLocalizationCache: Processed 45 localized package path(s) for 2 prioritized culture(s) in 0.012004 seconds
+[2025.11.01-19.27.58:295][435]LogSerialization: UsePackageTrailer: 'true'
+[2025.11.01-19.27.59:332][435]LogSavePackage: Moving output files for package: /Game/jdma/Maps/LV_1
+[2025.11.01-19.27.59:334][435]LogSavePackage: Moving '../../../../../../Users/PC/Documents/OPTI_EV/SpectralStadium/Saved/LV_1AE99AA134C40C21110E9B3B0EF3B4E09.tmp' to '../../../../../../Users/PC/Documents/OPTI_EV/SpectralStadium/Content/jdma/Maps/LV_1.umap'
+[2025.11.01-19.27.59:362][435]LogFileHelpers: No new changes to save!
+[2025.11.01-19.27.59:362][435]LogFileHelpers: Saving map 'LV_1' took 1.301
+[2025.11.01-19.27.59:369][435]LogFileHelpers: InternalPromptForCheckoutAndSave took 1.37 sec
+[2025.11.01-19.27.59:376][435]AssetCheck: New page: Asset Save: LV_1
+[2025.11.01-19.27.59:376][435]LogContentValidation: Display: Validating /Script/Engine.World /Game/jdma/Maps/LV_1.LV_1
